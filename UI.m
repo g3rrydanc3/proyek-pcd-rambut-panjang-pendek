@@ -83,32 +83,73 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 else
    disp(['User selected ', fullfile(pathname, filename)])
  end
-
+ 
 I = imread(fullfile(pathname, filename));
-I = I(:,:,1);
-figure;
-imshow(I);
-I = (I<32);
-I = imdilate(I, [1 1 1;1 1 1; 1 1 1]);
-figure;
-imshow(I);
-%ujung = bwmorph(I, 'endpoints');
-% %imshow(ujung);
-% figure;
-% imshow(I)
-% 
-% [label, num] = bwlabel(I);
-% imshow(label+1, [0 0 0; 1 0 0; 0 1 0; 0 0 1])
 
-% for i = 1:num
-%     pulau = (label==i);
-%     ujung = bwmorph(pulau, 'endpoints');
-%     jum = sum(sum(ujung));
-%     s = sprintf('Amuba ke %d memiliki %d sungut', i, jum);
-%     display(s);
-%     set(handles.text4, 'String', s);
-% end
-% 
+% I = I(:, :, 1);
+% bw = edge(I)
+% figure, imshow(I)
+%  figure, imshow(bw);
+I = rgb2gray(I);
+BW = imbinarize(I);
+
+C = bwareaopen(BW, 7500);
+gambar = 1-C;
+
+bw2 = bwmorph(gambar, 'spur', 5000);
+D = edge(bw2);
+figure, imshow(D)
+ 
+% title('Eyes Detection');
+
+%H=imrect(gca);
+%pos=wait(H);
+%close all
+%I(pos(1,2):pos(1,2)+pos(1,4),pos(1,1):pos(1,1)+pos(1,3))=0;
+%figure, imshow(H);
+%Eyes=imcrop(I,BB);
+%figure,imshow(Eyes);
+
+% Ieye = Ieye(:,:,1);
 % figure;
-% imshow(label+1, [0 0 0; 1 0 0; 0 0 1])
-%     
+% imshow(Ieye);
+% Ieye = (eyeI<32);
+% Ieye = imdilate(Ieye, [1 1 1;1 1 1; 1 1 1]);
+% figure;
+% imshow(Ieye);
+% 
+% BW3 = bwmorph(Ieye,'skel',Inf);
+% ujung = bwmorph(BW3, 'thin');
+% figure
+% imshow(ujung)
+% 
+% 
+% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
+% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
+% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
+% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
+% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
+% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
+% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
+% figure
+% imshow(BW3)
+% %ujung = bwmorph(I, 'endpoints');
+% % %imshow(ujung);
+% % figure;
+% % imshow(I)
+% % 
+% % [label, num] = bwlabel(I);
+% % imshow(label+1, [0 0 0; 1 0 0; 0 1 0; 0 0 1])
+% 
+% % for i = 1:num
+% %     pulau = (label==i);
+% %     ujung = bwmorph(pulau, 'endpoints');
+% %     jum = sum(sum(ujung));
+% %     s = sprintf('Amuba ke %d memiliki %d sungut', i, jum);
+% %     display(s);
+% %     set(handles.text4, 'String', s);
+% % end
+% % 
+% % figure;
+% % imshow(label+1, [0 0 0; 1 0 0; 0 0 1])
+% %     
