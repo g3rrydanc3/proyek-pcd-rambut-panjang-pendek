@@ -78,6 +78,8 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+clc;
+clear all;
 [filename, pathname] = uigetfile({'*.jpg';'*.png';'*.gif';'*.*'},'File Selector');
  if isequal(filename,0)
 else
@@ -85,15 +87,14 @@ else
  end
 
 FDetect = vision.CascadeObjectDetector; 
- 
 EyeDetect = vision.CascadeObjectDetector('EyePairBig');
-
 NoseDetect = vision.CascadeObjectDetector('Nose','MergeThreshold',16);
-
-
 MouthDetect = vision.CascadeObjectDetector('Mouth','MergeThreshold',16); 
 
 I = imread(fullfile(pathname, filename));
+I = rgb2gray(I);
+I = imresize(I, 0.5);
+figure,imshow(I);
 
 %detect face
 Face = step(FDetect,I);
@@ -102,9 +103,8 @@ Nose=step(NoseDetect,I);
 Mouth=step(MouthDetect,I);
 ctr = 0;
 
-
-figure,
-imshow(I); 
+I = imbinarize(I);
+figure,imshow(I);
 
 %hold on
 for i = 1:size(Face,1)
@@ -153,7 +153,7 @@ if ctr >= 4
     RGB = insertShape(I,'rectangle', kananB,'LineWidth',5);
 	I = RGB;
     
-    BW = imbinarize(I, 0.1);
+    %BW = imbinarize(I);
 end
 
 hold off
