@@ -152,11 +152,12 @@ if ctr >= 4
     kananB = [kananA(1) kananA(2)+kananA(4) kananA(3) kananA(4)];
     RGB = insertShape(I,'rectangle', kananB,'LineWidth',5);
 	I = RGB;
+    
+    BW = imbinarize(I, 0.1);
 end
 
-%hold off
-
-figure,imshow(I);
+hold off
+figure,imshow(BW);
 
 
 
