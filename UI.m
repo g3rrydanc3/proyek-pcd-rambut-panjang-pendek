@@ -83,73 +83,81 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 else
    disp(['User selected ', fullfile(pathname, filename)])
  end
+
+FDetect = vision.CascadeObjectDetector; 
  
+EyeDetect = vision.CascadeObjectDetector('EyePairBig');
+
+NoseDetect = vision.CascadeObjectDetector('Nose','MergeThreshold',16);
+
+
+MouthDetect = vision.CascadeObjectDetector('Mouth','MergeThreshold',16); 
+
 I = imread(fullfile(pathname, filename));
 
-% I = I(:, :, 1);
-% bw = edge(I)
-% figure, imshow(I)
-%  figure, imshow(bw);
-I = rgb2gray(I);
-BW = imbinarize(I);
+%detect face
+Face = step(FDetect,I);
+Eye = step(EyeDetect,I);
+Nose=step(NoseDetect,I);
+Mouth=step(MouthDetect,I);
+ctr = 0;
 
-C = bwareaopen(BW, 7500);
-gambar = 1-C;
 
-bw2 = bwmorph(gambar, 'spur', 5000);
-D = edge(bw2);
-figure, imshow(D)
- 
-% title('Eyes Detection');
+figure,
+imshow(I); 
 
-%H=imrect(gca);
-%pos=wait(H);
-%close all
-%I(pos(1,2):pos(1,2)+pos(1,4),pos(1,1):pos(1,1)+pos(1,3))=0;
-%figure, imshow(H);
-%Eyes=imcrop(I,BB);
-%figure,imshow(Eyes);
+%hold on
+for i = 1:size(Face,1)
+    a = rectangle('Position',Face(i,:),'LineWidth',5,'LineStyle','-','EdgeColor','r');
+    RGB = insertShape(I,'rectangle',a.Position,'LineWidth',5);
+    I = RGB;
+    ctr = ctr+1;
+end
+b = rectangle('Position',Eye,'LineWidth',4,'LineStyle','-','EdgeColor','b');
+RGB = insertShape(I,'rectangle',b.Position,'LineWidth',5);
+I = RGB;
+ctr = ctr+1;
+for i = 1:size(Nose,1)
+    c = rectangle('Position',Nose(i,:),'LineWidth',4,'LineStyle','-','EdgeColor','b');
+    RGB = insertShape(I,'rectangle',c.Position,'LineWidth',5);
+    I = RGB;
+    ctr = ctr+1;
+end
+for i = 1:size(Mouth,1)
+    d = rectangle('Position',Mouth(i,:),'LineWidth',4,'LineStyle','-','EdgeColor','r');
+    RGB = insertShape(I,'rectangle',d.Position,'LineWidth',5);
+    I = RGB;
+    ctr = ctr+1;
+end
 
-% Ieye = Ieye(:,:,1);
-% figure;
-% imshow(Ieye);
-% Ieye = (eyeI<32);
-% Ieye = imdilate(Ieye, [1 1 1;1 1 1; 1 1 1]);
-% figure;
-% imshow(Ieye);
-% 
-% BW3 = bwmorph(Ieye,'skel',Inf);
-% ujung = bwmorph(BW3, 'thin');
-% figure
-% imshow(ujung)
-% 
-% 
-% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
-% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
-% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
-% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
-% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
-% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
-% BW3 = imdilate(BW3, [1 1 1;1 1 1; 1 1 1]);
-% figure
-% imshow(BW3)
-% %ujung = bwmorph(I, 'endpoints');
-% % %imshow(ujung);
-% % figure;
-% % imshow(I)
-% % 
-% % [label, num] = bwlabel(I);
-% % imshow(label+1, [0 0 0; 1 0 0; 0 1 0; 0 0 1])
-% 
-% % for i = 1:num
-% %     pulau = (label==i);
-% %     ujung = bwmorph(pulau, 'endpoints');
-% %     jum = sum(sum(ujung));
-% %     s = sprintf('Amuba ke %d memiliki %d sungut', i, jum);
-% %     display(s);
-% %     set(handles.text4, 'String', s);
-% % end
-% % 
-% % figure;
-% % imshow(label+1, [0 0 0; 1 0 0; 0 0 1])
-% %     
+%hold off
+
+if ctr >= 4
+    atas = [a.Position(1) 0 a.Position(3) a.Position(2)];
+    RGB = insertShape(I,'rectangle', atas,'LineWidth',5);
+	I = RGB;
+    
+    kiriA = [a.Position(1)-100 a.Position(2) 100 a.Position(4)];
+    RGB = insertShape(I,'rectangle', kiriA,'LineWidth',5);
+	I = RGB;
+    
+    kananA = [a.Position(1)+a.Position(3) a.Position(2) 100 a.Position(4)];
+    RGB = insertShape(I,'rectangle', kananA,'LineWidth',5);
+	I = RGB;
+    
+    kiriB = [kiriA(1) kiriA(2)+kiriA(4) kiriA(3) kiriA(4)];
+    RGB = insertShape(I,'rectangle', kiriB,'LineWidth',5);
+	I = RGB;
+    
+    kananB = [kananA(1) kananA(2)+kananA(4) kananA(3) kananA(4)];
+    RGB = insertShape(I,'rectangle', kananB,'LineWidth',5);
+	I = RGB;
+end
+
+%hold off
+
+figure,imshow(I);
+
+
+
+%end detect face
