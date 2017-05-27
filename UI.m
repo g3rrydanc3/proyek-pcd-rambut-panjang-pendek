@@ -80,7 +80,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 clc;
 clear all;
-[filename, pathname] = uigetfile({'*.jpg';'*.png';'*.gif';'*.*'},'File Selector');
+[filename, pathname] = uigetfile({'*.jpg';'*.jpeg';'*.png';'*.gif';'*.*'},'File Selector');
  if isequal(filename,0)
 else
    disp(['User selected ', fullfile(pathname, filename)])
@@ -133,11 +133,11 @@ if ctr >= 1
     RGB = insertShape(I,'rectangle', atas,'LineWidth',5);
 	I = RGB;
     
-    kiriA = [a.Position(1)-100 a.Position(2) 100 a.Position(4)];
+    kiriA = [a.Position(1)-25 a.Position(2) 25 a.Position(4)];
     RGB = insertShape(I,'rectangle', kiriA,'LineWidth',5);
 	I = RGB;
     
-    kananA = [a.Position(1)+a.Position(3) a.Position(2) 100 a.Position(4)];
+    kananA = [a.Position(1)+a.Position(3) a.Position(2) 25 a.Position(4)];
     RGB = insertShape(I,'rectangle', kananA,'LineWidth',5);
 	I = RGB;
     
