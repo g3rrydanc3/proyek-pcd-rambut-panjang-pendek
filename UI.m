@@ -92,10 +92,7 @@ NoseDetect = vision.CascadeObjectDetector('Nose','MergeThreshold',16);
 MouthDetect = vision.CascadeObjectDetector('Mouth','MergeThreshold',16); 
 
 I = imread(fullfile(pathname, filename));
-I = rgb2gray(I);
-I = imresize(I, 0.5);
-figure,imshow(I);
-
+Foto = I;
 %detect face
 Face = step(FDetect,I);
 Eye = step(EyeDetect,I);
@@ -103,10 +100,9 @@ Nose=step(NoseDetect,I);
 Mouth=step(MouthDetect,I);
 ctr = 0;
 
-I = imbinarize(I);
 figure,imshow(I);
 
-%hold on
+hold on
 for i = 1:size(Face,1)
     a = rectangle('Position',Face(i,:),'LineWidth',5,'LineStyle','-','EdgeColor','r');
     RGB = insertShape(I,'rectangle',a.Position,'LineWidth',5);
@@ -129,10 +125,10 @@ for i = 1:size(Mouth,1)
     I = RGB;
     ctr = ctr+1;
 end
-
+%end detect face
 %hold off
 
-if ctr >= 4
+if ctr >= 1
     atas = [a.Position(1) 0 a.Position(3) a.Position(2)];
     RGB = insertShape(I,'rectangle', atas,'LineWidth',5);
 	I = RGB;
@@ -153,12 +149,68 @@ if ctr >= 4
     RGB = insertShape(I,'rectangle', kananB,'LineWidth',5);
 	I = RGB;
     
-    %BW = imbinarize(I);
+    figure, imshow(I);
 end
 
 hold off
-figure,imshow(BW);
+kotak1 = imcrop(I, atas);
+kotak2 = imcrop(I, kiriA);
+kotak3 = imcrop(I, kananA);
+kotak4 = imcrop(I, kiriB);
+kotak5 = imcrop(I, kananB);
 
+dominantRedValue1 = mean2(kotak1(:, :, 1));
+dominantGreenValue1 = mean2(kotak1(:, :, 2));
+dominantBlueValue1 = mean2(kotak1(:, :, 3));
 
+dominantRedValue2 = mean2(kotak2(:, :, 1));
+dominantGreenValue2 = mean2(kotak2(:, :, 2));
+dominantBlueValue2 = mean2(kotak2(:, :, 3));
 
-%end detect face
+dominantRedValue3 = mean2(kotak3(:, :, 1));
+dominantGreenValue3 = mean2(kotak3(:, :, 2));
+dominantBlueValue3 = mean2(kotak3(:, :, 3));
+
+dominantRedValue4 = mean2(kotak4(:, :, 1));
+dominantGreenValue4 = mean2(kotak4(:, :, 2));
+dominantBlueValue4 = mean2(kotak4(:, :, 3));
+
+dominantRedValue5 = mean2(kotak5(:, :, 1));
+dominantGreenValue5 = mean2(kotak5(:, :, 2));
+dominantBlueValue5 = mean2(kotak5(:, :, 3));
+
+if dominantRedValue1+60 >= dominantRedValue2 || dominantRedValue1-60 >= dominantRedValue2 || dominantRedValue1+60 >= dominantRedValue3 || dominantRedValue1-60 >= dominantRedValue3
+    if dominantGreenValue1+60 >= dominantGreenValue2 || dominantGreenValue1-60 >= dominantGreenValue2 || dominantGreenValue1+60 >= dominantGreenValue3 || dominantGreenValue1-60 >= dominantGreenValue3
+        if dominantBlueValue1+60 >= dominantBlueValue2 || dominantBlueValue1-60 >= dominantBlueValue2 || dominantBlueValue1+60 >= dominantBlueValue3 || dominantBlueValue1-60 >= dominantBlueValue3
+            if dominantRedValue2+60 >= dominantRedValue4 || dominantRedValue2-60 >= dominantRedValue4 || dominantRedValue3+60 >= dominantRedValue5 || dominantRedValue3-60 >= dominantRedValue5
+                if dominantGreenValue2+60 >= dominantGreenValue4 || dominantGreenValue2-60 >= dominantGreenValue4 || dominantGreenValue3+60 >= dominantGreenValue5 || dominantGreenValue3-60 >= dominantGreenValue5
+                    if dominantBlueValue2+60 >= dominantBlueValue4 || dominantBlueValue2-60 >= dominantBlueValue4 || dominantBlueValue3+60 >= dominantBlueValue5 || dominantBlueValue3-60 >= dominantBlueValue5
+                        figure, imshow(Foto)
+                        title('Rambut Panjang');
+                    else
+                        figure, imshow(Foto)
+                        title('Rambut Pendek');
+                    end
+                else
+                    figure, imshow(Foto)
+                    title('Rambut Pendek');
+                end
+            else
+                figure, imshow(Foto)
+                title('Rambut Pendek');
+            end
+        else
+            figure, imshow(Foto)
+            title('Rambut Pendek');
+        end
+    else
+        figure, imshow(Foto)
+        title('Rambut Pendek');
+    end
+else
+    figure, imshow(Foto)
+    title('Rambut Pendek');
+end
+
+display(dominantRedValue1)
+display(dominantRedValue2+60)
